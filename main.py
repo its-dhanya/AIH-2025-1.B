@@ -1379,7 +1379,7 @@ Your turn for these {domain_name} chunks:"""
 
             # Extract chunks from all PDFs
             all_chunks = []
-            pdf_dir = collection_path / 'pdfs' if (collection_path / 'pdfs').exists() else collection_path
+            pdf_dir = collection_path / 'PDFs' if (collection_path / 'PDFs').exists() else collection_path
             
             processed_docs = 0
             # Use the 'documents' list from the loaded collection_metadata_dict
