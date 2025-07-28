@@ -21,7 +21,7 @@ Before you begin, ensure you have the following installed on your system:
 ### Ollama
 - This project uses an external Ollama server for its Large Language Model (LLM) capabilities. The Ollama server and its models are NOT bundled within this Docker image due to size constraints.
 
-**Installation**: Download and install Ollama on your host machine.
+**Installation**: Download and install Ollama on your host machine: https://ollama.com/download
 
 **Model Download**: After installing Ollama, pull the stablelm2 model:
 ```bash
@@ -67,38 +67,27 @@ Your project directory should be structured as follows:
 
 ## Setup and Execution
 
-### 1. Build the Docker Image
-
-Navigate to the root directory of your project (where the `Dockerfile` is located) and run:
-
+### 1) Build Docker Image
 ```bash
-docker build --platform linux/amd64 -t doc-analysis-pipeline:v1.0 .
+sudo docker build -t my-python-app .
 ```
 
-This builds the Docker image named `doc-analysis-pipeline` with the tag `v1.0`.
-
-It installs all Python dependencies and downloads the Sentence Transformer (`msmarco-MiniLM-L-6-v3`) and spaCy (`en_core_web_sm`) models directly into the image.
-
-### 2. Run the Docker Container
-
-Execute the pipeline by running the Docker container:
-
+### 2) Create Docker Network
 ```bash
-docker run --rm \
-  -v "$(pwd)/app/input:/app/input" \
-  -v "$(pwd)/app/output:/app/output" \
-  --network host \
-  doc-analysis-pipeline:v1.0
+sudo docker network create ollama-net
 ```
 
-- `--rm`: Automatically removes the container after execution.
-- `-v "$(pwd)/app/input:/app/input"`: Mounts your local input directory.
-- `-v "$(pwd)/app/output:/app/output"`: Mounts your local output directory.
-- `--network host`: Required for accessing the Ollama server on `localhost:11434`.
+### 3) Run the Docker Container
+```bash
+sudo docker run -it --rm --network ollama-net \
+  -e OLLAMA_HOST=http://ollama:11434 \
+  -v ~/Desktop/Adobe/AIH-2025-1.B/app/input:/app/input \
+  -v ~/Desktop/Adobe/AIH-2025-1.B/app/output:/app/output \
+  my-python-app
+```
 
-### 3. View Results
-
-After execution, the generated JSON analysis reports (e.g., `Collection 1_analysis.json`) will be in the local `app/output/` directory.
+### 4) View Results
+After execution, the generated JSON analysis reports (e.g., `Collection_1_analysis.json`) will be in your local `app/output/` directory.
 
 ## Troubleshooting
 
